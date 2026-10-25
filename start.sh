@@ -15,11 +15,13 @@ if [ -z "$APP_KEY" ]; then
     php artisan key:generate --force 2>/dev/null || true
 fi
 
-# Clear caches
+# Clear caches to avoid conflicts
 php artisan config:clear 2>/dev/null || true
 php artisan route:clear 2>/dev/null || true
+php artisan view:clear 2>/dev/null || true
 
-# Run migrations
+# Run migrations and seeders
+echo "Execution des migrations..."
 php artisan migrate --force --seed 2>/dev/null || true
 
 # Cache config
