@@ -19,7 +19,7 @@ WORKDIR /var/www
 # Copy project files
 COPY . .
 
-# Copy .env.build as .env for composer install (package:discover needs it)
+# Copy .env.build as .env for Laravel
 RUN cp .env.build .env 2>/dev/null || true
 
 # Allow composer to run as root
@@ -30,6 +30,10 @@ RUN composer install --no-dev --optimize-autoloader 2>&1 || true
 
 # Generate application key
 RUN php artisan key:generate --force 2>/dev/null || true
+
+# Set permissions for storage and cache
+RUN chmod -R 775 storage bootstrap/cache 2>/dev/null || true
+RUN chown -R www-data:www-data /var/www 2>/dev/null || true
 
 # Expose port 10000 (Render default)
 EXPOSE 10000
