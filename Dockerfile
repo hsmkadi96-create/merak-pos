@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Enable Apache modules (rewrite + headers for .htaccess)
+# Enable Apache modules
 RUN a2enmod rewrite headers
 
 # Set working directory
@@ -35,8 +35,10 @@ RUN php artisan key:generate --force 2>/dev/null || true
 RUN chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 RUN chown -R www-data:www-data /var/www 2>/dev/null || true
 
-# Configure Apache to listen on port 10000 (Render default)
+# Configure Apache: DocumentRoot on /var/www/public, port 10000
 RUN sed -i 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf
+RUN sed -i 's#DocumentRoot /var/www/html#DocumentRoot /var/www/public#' /etc/apache2/sites-available/000-default.conf 2>/dev/null || true
+RUN sed -i 's#<Directory /var/www/html>#<Directory /var/www/public>#' /etc/apache2/sites-available/000-default.conf 2>/dev/null || true
 RUN sed -i 's/<VirtualHost \*:80>/<VirtualHost *:10000>/' /etc/apache2/sites-available/000-default.conf 2>/dev/null || true
 
 # Expose port 10000

@@ -37,6 +37,6 @@ php artisan storage:link 2>/dev/null || true
 chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 chown -R www-data:www-data /var/www 2>/dev/null || true
 
-# Demarrer Apache en foreground
+# Demarrer Apache en foreground sur le port 10000
 echo "Demarrage d'Apache sur le port 10000..."
 apache2-foreground
