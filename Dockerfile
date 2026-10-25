@@ -31,9 +31,10 @@ RUN composer install --no-dev --optimize-autoloader 2>&1 || true
 # Generate application key
 RUN php artisan key:generate --force 2>/dev/null || true
 
-# Set permissions
-RUN chmod -R 775 storage bootstrap/cache 2>/dev/null || true
-RUN chown -R www-data:www-data /var/www 2>/dev/null || true
+# Create required directories and set permissions
+RUN mkdir -p bootstrap/cache storage/framework/cache storage/framework/sessions storage/framework/views \
+    && chmod -R 775 storage bootstrap/cache \
+    && chown -R www-data:www-data /var/www
 
 # Configure Apache: DocumentRoot on /var/www/public, port 10000
 RUN sed -i 's/Listen 80/Listen 10000/' /etc/apache2/ports.conf
