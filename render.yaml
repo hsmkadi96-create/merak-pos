@@ -1,0 +1,59 @@
+services:
+  - type: web
+    name: merak-pos
+    env: php
+    plan: free
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      npm install && npm run build
+      php artisan key:generate --force || true
+      php artisan migrate --force --seed || true
+      php artisan config:cache || true
+      php artisan route:cache || true
+      php artisan view:cache || true
+    startCommand: php artisan serve --host=0.0.0.0 --port=$PORT
+    envVars:
+      - key: APP_NAME
+        value: MERAK POS
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://merak-pos.onrender.com
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        value: dpg-xxx.render.com
+      - key: DB_PORT
+        value: 5432
+      - key: DB_DATABASE
+        value: merak_pos
+      - key: DB_USERNAME
+        value: merak_user
+      - key: DB_PASSWORD
+        value: xxx
+      - key: CIB_API_KEY
+        value: ""
+      - key: CIB_API_SECRET
+        value: ""
+      - key: CIB_API_URL
+        value: https://api.cib.dz/sandbox
+      - key: DAHABIA_API_KEY
+        value: ""
+      - key: DAHABIA_API_SECRET
+        value: ""
+      - key: DAHABIA_API_URL
+        value: https://api.dahabia.dz/sandbox
+      - key: CHIF_AA_API_KEY
+        value: ""
+      - key: CHIF_AA_API_SECRET
+        value: ""
+      - key: CHIF_AA_API_URL
+        value: https://api.chifaa.dz/sandbox
+
+databases:
+  - name: merak-pos-db
+    plan: free
+    region: frankfurt
+    ipAllowList: []
