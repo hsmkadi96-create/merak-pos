@@ -2,41 +2,36 @@
 
 echo "=== DEMARRAGE MERAK POS ==="
 
-# Attendre que la base de données soit prête
-echo "Attente de la base de donnees..."
+# Wait for database
 sleep 20
 
-# Copier .env.build vers .env si .env n'existe pas
+# Copy .env.build as .env if needed
 if [ ! -f .env ]; then
     cp .env.build .env 2>/dev/null || true
 fi
 
-# Generer la cle d'application si absente
+# Generate app key if missing
 if [ -z "$APP_KEY" ]; then
     php artisan key:generate --force 2>/dev/null || true
 fi
 
-# Nettoyer les caches pour eviter les conflits
+# Clear caches
 php artisan config:clear 2>/dev/null || true
 php artisan route:clear 2>/dev/null || true
-php artisan view:clear 2>/dev/null || true
 
-# Executer les migrations et seeders
-echo "Execution des migrations..."
+# Run migrations
 php artisan migrate --force --seed 2>/dev/null || true
 
-# Recacher la configuration
+# Cache config
 php artisan config:cache 2>/dev/null || true
-php artisan route:cache 2>/dev/null || true
-php artisan view:cache 2>/dev/null || true
 
-# Creer le lien symbolique pour le stockage
+# Storage link
 php artisan storage:link 2>/dev/null || true
 
-# Definir les permissions
+# Permissions
 chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 chown -R www-data:www-data /var/www 2>/dev/null || true
 
-# Demarrer Apache en foreground sur le port 10000
-echo "Demarrage d'Apache sur le port 10000..."
-apache2-foreground
+# Start Apache on port 10000
+echo "Apache demarre sur le port 10000"
+exec apache2-foreground

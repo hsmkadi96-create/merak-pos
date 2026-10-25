@@ -31,7 +31,7 @@ RUN composer install --no-dev --optimize-autoloader 2>&1 || true
 # Generate application key
 RUN php artisan key:generate --force 2>/dev/null || true
 
-# Set permissions for storage and cache
+# Set permissions
 RUN chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 RUN chown -R www-data:www-data /var/www 2>/dev/null || true
 
