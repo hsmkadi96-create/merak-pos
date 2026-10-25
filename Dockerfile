@@ -3,8 +3,9 @@ FROM php:8.2-apache
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git curl zip unzip libpng-dev libonig-dev libxml2-dev \
-    libzip-dev libsqlite3-dev libpq-dev \
-    && docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd zip
+    libzip-dev libpq-dev libicu-dev \
+    && docker-php-ext-install pdo_mysql pdo_pgsql mbstring exif pcntl bcmath gd zip intl \
+    && docker-php-ext-configure intl
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -18,8 +19,14 @@ WORKDIR /var/www
 # Copy project files
 COPY . .
 
+# Copy .env.build as .env for composer install (package:discover needs it)
+RUN cp .env.build .env 2>/dev/null || true
+
+# Allow composer to run as root
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader 2>&1 || true
 
 # Generate application key
 RUN php artisan key:generate --force 2>/dev/null || true

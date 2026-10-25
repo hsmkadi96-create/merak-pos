@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Wait for database to be ready
-sleep 10
+sleep 15
 
 # Run migrations and seed
 php artisan migrate --force --seed 2>/dev/null || true

@@ -11,3 +11,5 @@ bootstrap/cache/
 Thumbs.db
 .git/
 .gitignore
+.env.build
+deploy-*.ps1
