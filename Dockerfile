@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Enable Apache modules
-RUN a2enmod rewrite
+# Enable Apache modules (rewrite + headers for .htaccess)
+RUN a2enmod rewrite headers
 
 # Set working directory
 WORKDIR /var/www
