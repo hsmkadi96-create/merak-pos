@@ -3,7 +3,7 @@
 echo "=== DEMARRAGE MERAK POS ==="
 
 # Wait for database to be ready
-echo "Attente de la base de données..."
+echo "Attente de la base de donnees..."
 sleep 15
 
 # Copy .env.build as .env if .env doesn't exist
@@ -17,7 +17,7 @@ if [ -z "$APP_KEY" ]; then
 fi
 
 # Run migrations
-echo "Exécution des migrations..."
+echo "Execution des migrations..."
 php artisan migrate --force --seed 2>/dev/null || true
 
 # Cache configuration
@@ -33,5 +33,5 @@ chmod -R 775 storage bootstrap/cache 2>/dev/null || true
 chown -R www-data:www-data /var/www 2>/dev/null || true
 
 # Start Apache in foreground
-echo "Démarrage d'Apache..."
+echo "Demarrage d'Apache sur le port 10000..."
 apache2-foreground
