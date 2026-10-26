@@ -19,8 +19,8 @@ WORKDIR /var/www
 # Copy project files
 COPY . .
 
-# Copy .env.build as .env for Laravel
-RUN cp .env.build .env 2>/dev/null || true
+# Copy .env (already has correct PostgreSQL settings)
+RUN cp .env .env 2>/dev/null || true
 
 # Allow composer to run as root
 ENV COMPOSER_ALLOW_SUPERUSER=1

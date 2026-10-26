@@ -5,7 +5,7 @@ echo "=== DEMARRAGE MERAK POS ==="
 # Wait for database
 sleep 20
 
-# Copy .env.build as .env if needed
+# Ensure .env exists with correct DB settings
 if [ ! -f .env ]; then
     cp .env.build .env 2>/dev/null || true
 fi
@@ -22,12 +22,13 @@ if [ -z "$APP_KEY" ]; then
     php artisan key:generate --force 2>/dev/null || true
 fi
 
-# Clear caches
+# Clear all caches
 php artisan config:clear 2>/dev/null || true
 php artisan route:clear 2>/dev/null || true
 php artisan view:clear 2>/dev/null || true
+php artisan cache:clear 2>/dev/null || true
 
-# Run migrations
+# Run migrations and seeders
 echo "Execution des migrations..."
 php artisan migrate --force --seed 2>/dev/null || true
 
